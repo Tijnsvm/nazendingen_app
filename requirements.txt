@@ -1,15 +1,4 @@
 streamlit
 pandas
 openpyxl
-import streamlit as st
-import pandas as pd
-import os
-import json
-from datetime import datetime, timedelta
-import base64
-import time
-import io
-import shutil
-import matplotlib.pyplot as plt
-import matplotlib
-matplotlib.use('Agg')
+matplotlib
