@@ -42,7 +42,7 @@ def opslaan_instellingen(instellingen):
 
 # ---- NA ieder inladen van instellingen: set globale TEAMLEDEN en BEWAAR_UUR ----
 instellingen = laad_instellingen()
-TEAMLEDEN = instellingen.get("teamleden", ["Tijn", "Jordi", "Thijmen", "Maaike", "Ulfet"])
+TEAMLEDEN = instellingen.get("teamleden", ["Tijn", "Jordi", "Thijmen", "Maaike", "Ulfet", "Robin", "Elissa"])
 BEWAAR_UUR = instellingen.get("bewaar_uur", 26)
 
 # ---- Backup functie ----
@@ -235,7 +235,7 @@ logo_base64 = get_logo_base64()
 st.markdown(f"""
 <div id="vivid-header">
     {f'<img id="vivid-logo" src="data:image/png;base64,{logo_base64}"/>' if logo_base64 else ''}
-    <div class="header-title">📦 Vivid Green Nazendingen Systeem</div>
+    <div class="header-title">📦 Nazending Systeem</div>
     <div class="header-sub">Efficiënt, vriendelijk & altijd overzicht – samen voor topservice!</div>
 </div>
 """, unsafe_allow_html=True)
@@ -262,17 +262,45 @@ def progress_html(status):
 
 def stats_cards(df):
     nu = datetime.now()
-    df_verzonden = df[df["Status"]=="Verzonden"].copy()
+
+    # Bestaande tellers
+    s1 = int((df["Status"] == "Aangevraagd").sum())
+    s2 = int((df["Status"] == "SIU ingevoerd").sum())
+
+    # Verzonden in de afgelopen BEWAAR_UUR
+    df_verzonden = df[df["Status"] == "Verzonden"].copy()
     df_verzonden["Datum verzending dt"] = pd.to_datetime(df_verzonden["Datum verzending"], errors="coerce")
     df_verzonden = df_verzonden[df_verzonden["Datum verzending dt"].notna()]
     df_verzonden = df_verzonden[(nu - df_verzonden["Datum verzending dt"]) < timedelta(hours=BEWAAR_UUR)]
-    s1 = int((df["Status"]=="Aangevraagd").sum())
-    s2 = int((df["Status"]=="SIU ingevoerd").sum())
     s3 = int(len(df_verzonden))
-    col1, col2, col3 = st.columns(3)
-    col1.markdown(f'<div class="stat-card"><h3>{s1}</h3><span>Aangevraagd</span></div>', unsafe_allow_html=True)
-    col2.markdown(f'<div class="stat-card"><h3>{s2}</h3><span>SIU ingevuld</span></div>', unsafe_allow_html=True)
-    col3.markdown(f'<div class="stat-card"><h3>{s3}</h3><span>Verzonden (laatste {BEWAAR_UUR} uur)</span></div>', unsafe_allow_html=True)
+
+    # Aparte tellers voor Op voorraad / Niet op voorraadst
+    s_op_voorraad = int((df["Status"] == "Op voorraad").sum())
+    s_niet_voorraad = int((df["Status"] == "Niet op voorraad").sum())
+
+    # Vijf kolommen: Aangevraagd, Op voorraad, Niet op voorraad, SIU ingevuld, Verzonden
+    col1, col2, col3, col4, col5 = st.columns(5)
+
+    col1.markdown(
+        f'<div class="stat-card"><h3>{s1}</h3><span>Aangevraagd ⏳</span></div>',
+        unsafe_allow_html=True
+    )
+    col2.markdown(
+        f'<div class="stat-card"><h3>{s_op_voorraad}</h3><span>Op voorraad ✅</span></div>',
+        unsafe_allow_html=True
+    )
+    col3.markdown(
+        f'<div class="stat-card"><h3>{s_niet_voorraad}</h3><span>Niet op voorraad ❌</span></div>',
+        unsafe_allow_html=True
+    )
+    col4.markdown(
+        f'<div class="stat-card"><h3>{s2}</h3><span>SIU ingevuld 📝</span></div>',
+        unsafe_allow_html=True
+    )
+    col5.markdown(
+        f'<div class="stat-card"><h3>{s3}</h3><span>Verzonden 📤 (laatste {BEWAAR_UUR} uur)</span></div>',
+        unsafe_allow_html=True
+    )
 
 # ---- TABS ----
 tab1, tab2, tab3, tab4, tab5, tab6, = st.tabs([
@@ -303,7 +331,7 @@ with tab1:
         default_index = 0
 
     st.markdown("#### Nieuwe nazending aanvragen")
-    with st.form("aanvraag_form"):
+    with st.form("aanvraag_form", clear_on_submit=True):
         ean = st.text_input("EAN-nummer")
         productnaam = st.text_input("Productnaam")
         bestelnummer = st.text_input("Bestelnummer")
@@ -373,7 +401,7 @@ with tab1:
                 f"<span style='font-size:0.94em;color:#009980bb'><b>Tijd:</b> {row.get('Tijd gekozen','-')}</span>",
                 unsafe_allow_html=True
             )
-            cols[1].markdown(f"**Product:**<br>{row['Productnaam']}", unsafe_allow_html=True)
+            cols[1].markdown(f"**Product:**<br>{row['Productnaam']}<br><b>Bestelnummer:</b> {row['Bestelnummer']}", unsafe_allow_html=True)
             cols[2].markdown(f"**Nazending:**<br>{row['Nazending']}", unsafe_allow_html=True)
             cols[3].markdown(progress_html(row['Status']), unsafe_allow_html=True)
             cols[4].markdown(status_chip(row['Status']), unsafe_allow_html=True)
@@ -452,7 +480,7 @@ with tab2:
                 f"<span style='font-size:0.94em;color:#009980bb'><b>Tijd:</b> {row.get('Tijd gekozen','-')}</span>",
                 unsafe_allow_html=True
             )
-            cols[1].markdown(f"**Product:**<br>{row['Productnaam']}", unsafe_allow_html=True)
+            cols[1].markdown(f"**Product:**<br>{row['Productnaam']}<br><b>Bestelnummer:</b> {row['Bestelnummer']}", unsafe_allow_html=True)
             cols[2].markdown(f"**Nazending:**<br>{row['Nazending']}", unsafe_allow_html=True)
             cols[3].markdown(progress_html(row['Status']), unsafe_allow_html=True)
             status_display = row['Status']
@@ -570,6 +598,7 @@ with tab3:
                     f"<span style='font-size:0.94em;color:#009980bb'><b>Beoordeeld door:</b> {row.get('Beoordeeld door','')}</span><br>"
                     f"<b>Product:</b> {row['Productnaam']}<br>"
                     f"<b>Nazending:</b> {row['Nazending']}<br>"
+                    f"<b>Bestelnummer:</b> {row['Bestelnummer']}<br>"
                     f"<b>Opmerking magazijn:</b> {row.get('Beoordeling opmerking','')}",
                     unsafe_allow_html=True)
                 col1, col2 = st.columns([2, 1])
@@ -597,7 +626,7 @@ with tab3:
                 f"<span style='font-size:0.94em;color:#009980bb'><b>Beoordeeld door:</b> {row.get('Beoordeeld door','')}</span>",
                 unsafe_allow_html=True
             )
-            cols[1].markdown(f"**Product:**<br>{row['Productnaam']}", unsafe_allow_html=True)
+            cols[1].markdown(f"**Product:**<br>{row['Productnaam']}<br><b>Bestelnummer:</b> {row['Bestelnummer']}", unsafe_allow_html=True)
             cols[2].markdown(f"**Nazending:**<br>{row['Nazending']}", unsafe_allow_html=True)
             cols[3].markdown(f"**Opmerking magazijn:**<br>{row.get('Beoordeling opmerking','')}", unsafe_allow_html=True)
             siu = cols[4].text_input("SIU-nummer invoeren", value=str(row.get("SIU-nummer","")), key=f"siu_{row['ID']}")
@@ -631,7 +660,7 @@ with tab4:
                 f"<span style='font-size:0.94em;color:#009980bb'><b>Beoordeeld door:</b> {row.get('Beoordeeld door','')}</span>",
                 unsafe_allow_html=True
             )
-            cols[1].markdown(f"**Product:**<br>{row['Productnaam']}", unsafe_allow_html=True)
+            cols[1].markdown(f"**Product:**<br>{row['Productnaam']}<br><b>Bestelnummer:</b> {row['Bestelnummer']}", unsafe_allow_html=True)
             cols[2].markdown(f"**Nazending:**<br>{row['Nazending']}", unsafe_allow_html=True)
             cols[3].markdown(f"**SIU-nummer:**<br>{row.get('SIU-nummer','')}", unsafe_allow_html=True)
             with cols[5]:
@@ -697,7 +726,7 @@ with tab5:
                 f"<span style='font-size:0.91em;color:#009980bb'><b>Verzonden door:</b> {row.get('Verzonden door','')}</span>",
                 unsafe_allow_html=True
             )
-            cols[1].markdown(f"**Product:**<br>{row['Productnaam']}", unsafe_allow_html=True)
+            cols[1].markdown(f"**Product:**<br>{row['Productnaam']}<br><b>Bestelnummer:</b> {row['Bestelnummer']}", unsafe_allow_html=True)
             cols[2].markdown(f"**Nazending:**<br>{row['Nazending']}", unsafe_allow_html=True)
             cols[3].markdown(progress_html(row['Status']), unsafe_allow_html=True)
             cols[4].markdown(status_chip(row['Status']), unsafe_allow_html=True)
