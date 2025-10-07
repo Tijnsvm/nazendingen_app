@@ -925,8 +925,6 @@ if nieuw_uur != instellingen.get("bewaar_uur", 26):
     st.rerun()
 st.info(f"Pakketten verdwijnen nu automatisch na **{instellingen['bewaar_uur']} uur** uit tabblad 'Verzonden pakketten'.")
 
-    st.divider()
-
     # 3. Back-up & export
     st.subheader("Back-up & export")
     if st.button("📤 Download Excel-backup"):
