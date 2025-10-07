@@ -914,7 +914,7 @@ with tab6:
                 st.rerun()
     st.markdown(f"**Huidige teamleden:** {', '.join(instellingen['teamleden'])}")
 
-     st.divider()
+    st.divider()
 
     st.subheader("Maximale bewaartijd verzonden pakketten")
 nieuw_uur = st.slider("Aantal uur", min_value=6, max_value=168, value=instellingen.get("bewaar_uur", 26), step=1)
