@@ -923,6 +923,7 @@ with tab6:
       opslaan_instellingen(instellingen)
     st.success(f"Nieuwe bewaarperiode: {nieuw_uur} uur")
     st.rerun()
+    
     st.info(f"Pakketten verdwijnen nu automatisch na **{instellingen['bewaar_uur']} uur** uit tabblad 'Verzonden pakketten'.")
     
     st.divider()
