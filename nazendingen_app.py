@@ -452,7 +452,7 @@ with tab1:
                             st.session_state.delete_request = None
             if preview_this:
                 with st.expander("🔍 Preview foto", expanded=True):
-                    st.image(st.session_state.preview_foto, use_column_width="auto", caption="Klik buiten deze preview om te sluiten.")
+                    st.image(st.session_state.preview_foto, use_container_width=True, caption="Klik buiten deze preview om te sluiten.")
                     if st.button("Sluit preview", key=f"sluit_preview_aanv_{row['ID']}_{j}"):
                         st.session_state.preview_foto = None
                         st.session_state.preview_idx = None
@@ -532,7 +532,7 @@ with tab2:
                             st.session_state.delete_request = None
             if preview_this:
                 with st.expander("🔍 Preview foto", expanded=True):
-                    st.image(st.session_state.preview_foto, use_column_width="auto", caption="Klik buiten deze preview om te sluiten.")
+                    st.image(st.session_state.preview_foto, use_container_width=True, caption="Klik buiten deze preview om te sluiten.")
                     if st.button("Sluit preview", key=f"sluit_preview_beoord_{row['ID']}_{j}"):
                         st.session_state.preview_foto = None
                         st.session_state.preview_idx = None
@@ -628,7 +628,7 @@ with tab3:
                     st.write("_Geen foto's_")
                 if preview_this:
                     with st.expander("🔍 Preview foto", expanded=True):
-                        st.image(st.session_state.preview_foto, use_column_width="auto", caption="Klik buiten deze preview om te sluiten.")
+                        st.image(st.session_state.preview_foto, use_container_width=True, caption="Klik buiten deze preview om te sluiten.")
                         if st.button("Sluit preview", key=f"sluit_preview_siu_{row['ID']}_{j}"):
                             st.session_state.preview_foto = None
                             st.session_state.preview_idx = None
@@ -689,7 +689,7 @@ with tab3:
                 st.write("_Geen foto's_")
             if preview_this:
                 with st.expander("🔍 Preview foto", expanded=True):
-                    st.image(st.session_state.preview_foto, use_column_width="auto", caption="Klik buiten deze preview om te sluiten.")
+                    st.image(st.session_state.preview_foto, use_container_width=True, caption="Klik buiten deze preview om te sluiten.")
                     if st.button("Sluit preview", key=f"sluit_preview_siu_{row['ID']}_{j}"):
                         st.session_state.preview_foto = None
                         st.session_state.preview_idx = None
@@ -756,7 +756,7 @@ with tab4:
                 st.write("_Geen foto's_")
             if preview_this:
                 with st.expander("🔍 Preview foto", expanded=True):
-                    st.image(st.session_state.preview_foto, use_column_width="auto", caption="Klik buiten deze preview om te sluiten.")
+                    st.image(st.session_state.preview_foto, use_container_width=True, caption="Klik buiten deze preview om te sluiten.")
                     if st.button("Sluit preview", key=f"sluit_preview_verstuur_{row['ID']}_{j}"):
                         st.session_state.preview_foto = None
                         st.session_state.preview_idx = None
@@ -856,7 +856,7 @@ with tab5:
                 st.write("_Geen foto's_")
             if preview_this:
                 with st.expander("🔍 Preview foto", expanded=True):
-                    st.image(st.session_state.preview_foto, use_column_width="auto", caption="Klik buiten deze preview om te sluiten.")
+                    st.image(st.session_state.preview_foto, use_container_width=True, caption="Klik buiten deze preview om te sluiten.")
                     if st.button("Sluit preview", key=f"sluit_preview_verzonden_{row['ID']}_{j}"):
                         st.session_state.preview_foto = None
                         st.session_state.preview_idx = None
