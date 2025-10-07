@@ -11,6 +11,15 @@ import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.use('Agg')
 
+# --- Tijdzone fix (NL tijd, voorkomt 2 uur verschil bij GitHub/Streamlit Cloud) ---
+os.environ["TZ"] = "Europe/Amsterdam"
+try:
+    time.tzset()  # werkt op Linux, Streamlit Cloud, GitHub Codespaces
+except AttributeError:
+    # Windows heeft geen tzset(); lokaal is dit meestal al goed
+    pass
+
+
 NAZENDINGEN_BESTAND = "nazendingen.xlsx"
 BACKUP_MAP = "backups"
 UPLOAD_MAP = "uploads"
