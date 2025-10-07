@@ -42,7 +42,7 @@ def opslaan_instellingen(instellingen):
 
 # ---- NA ieder inladen van instellingen: set globale TEAMLEDEN en BEWAAR_UUR ----
 instellingen = laad_instellingen()
-TEAMLEDEN = instellingen.get("teamleden", ["Tijn", "Jordi", "Thijmen", "Maaike", "Ulfet", "Robin", "Elissa"])
+TEAMLEDEN = instellingen.get("teamleden", ["Tijn", "Jordi", "Thijmen", "Maaike", "Ulfet", "Robin", "Romy"])
 BEWAAR_UUR = instellingen.get("bewaar_uur", 26)
 
 # ---- Backup functie ----
@@ -318,10 +318,10 @@ with tab1:
     stats_cards(df)
     vandaag = datetime.now().date()
     nu = datetime.now()
-    tijden = [f"{h:02d}:{m:02d}" for h in range(9, 15) for m in range(60)]
+    tijden = [f"{h:02d}:{m:02d}" for h in range(9, 22) for m in range(60)]
     tijd_nu = nu.strftime("%H:%M")
     tijd_start = datetime.strptime("09:00", "%H:%M").time()
-    tijd_eind = datetime.strptime("14:59", "%H:%M").time()
+    tijd_eind = datetime.strptime("22:00", "%H:%M").time()
     if tijd_start <= nu.time() <= tijd_eind:
         tijden_dt = [datetime.strptime(t, "%H:%M") for t in tijden]
         nu_dt = datetime.strptime(tijd_nu, "%H:%M")
@@ -918,7 +918,7 @@ with tab6:
 
     # 2. Bewaarperiode verzonden pakketten
     st.subheader("Maximale bewaartijd verzonden pakketten")
-    nieuw_uur = st.slider("Aantal uur", min_value=6, max_value=72, value=instellingen.get("bewaar_uur", 26), step=1)
+    nieuw_uur = st.slider("Aantal uur", min_value=6, max_value=168, value=instellingen.get("bewaar_uur", 26), step=1)
     if nieuw_uur != instellingen.get("bewaar_uur", 26):
         instellingen["bewaar_uur"] = nieuw_uur
         opslaan_instellingen(instellingen)
@@ -958,3 +958,4 @@ with tab6:
         maak_backup() 
         st.success("Alle data gewist & systeem teruggezet naar leeg!")
         st.rerun()
+
