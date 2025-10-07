@@ -916,16 +916,16 @@ with tab6:
 
     st.divider()
 
+    # 2. Bewaarperiode verzonden pakketten
     st.subheader("Maximale bewaartijd verzonden pakketten")
     nieuw_uur = st.slider("Aantal uur", min_value=6, max_value=168, value=instellingen.get("bewaar_uur", 26), step=1)
     if nieuw_uur != instellingen.get("bewaar_uur", 26):
-      instellingen["bewaar_uur"] = nieuw_uur
-      opslaan_instellingen(instellingen)
-    st.success(f"Nieuwe bewaarperiode: {nieuw_uur} uur")
-    st.rerun()
-    
+        instellingen["bewaar_uur"] = nieuw_uur
+        opslaan_instellingen(instellingen)
+        st.success(f"Nieuwe bewaarperiode: {nieuw_uur} uur")
+        st.rerun()
     st.info(f"Pakketten verdwijnen nu automatisch na **{instellingen['bewaar_uur']} uur** uit tabblad 'Verzonden pakketten'.")
-    
+
     st.divider()
 
     # 3. Back-up & export
@@ -958,4 +958,3 @@ with tab6:
         maak_backup() 
         st.success("Alle data gewist & systeem teruggezet naar leeg!")
         st.rerun()
-
