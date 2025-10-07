@@ -918,7 +918,7 @@ with tab6:
 
     # 2. Bewaarperiode verzonden pakketten
     st.subheader("Maximale bewaartijd verzonden pakketten")
-    nieuw_uur = st.slider("Aantal uur", min_value=6, max_value=168, value=instellingen.get("bewaar_uur", 26), step=1)
+    nieuw_uur = st.slider("Aantal uur", min_value=6, max_value=72, value=instellingen.get("bewaar_uur", 26), step=1)
     if nieuw_uur != instellingen.get("bewaar_uur", 26):
         instellingen["bewaar_uur"] = nieuw_uur
         opslaan_instellingen(instellingen)
