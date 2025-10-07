@@ -601,6 +601,39 @@ with tab3:
                     f"<b>Bestelnummer:</b> {row['Bestelnummer']}<br>"
                     f"<b>Opmerking magazijn:</b> {row.get('Beoordeling opmerking','')}",
                     unsafe_allow_html=True)
+
+                # FOTO PREVIEW hier:
+                fotos = []
+                try: fotos = json.loads(row.get("Fotos", "[]"))
+                except: pass
+                preview_this = False
+                if fotos:
+                    foto_row = st.columns(len(fotos))
+                    for j, foto in enumerate(fotos):
+                        if os.path.exists(foto):
+                            with foto_row[j]:
+                                st.image(foto, width=60)
+                                if st.button("👁️", key=f"preview_siu_{row['ID']}_{j}"):
+                                    st.session_state.preview_foto = foto
+                                    st.session_state.preview_idx = f"siu_{row['ID']}_{j}"
+                                    st.rerun()
+                            if (
+                                st.session_state.preview_foto == foto
+                                and st.session_state.preview_idx == f"siu_{row['ID']}_{j}"
+                            ):
+                                preview_this = True
+                        else:
+                            st.write("_Foto ontbreekt_")
+                else:
+                    st.write("_Geen foto's_")
+                if preview_this:
+                    with st.expander("🔍 Preview foto", expanded=True):
+                        st.image(st.session_state.preview_foto, use_column_width="auto", caption="Klik buiten deze preview om te sluiten.")
+                        if st.button("Sluit preview", key=f"sluit_preview_siu_{row['ID']}_{j}"):
+                            st.session_state.preview_foto = None
+                            st.session_state.preview_idx = None
+                            st.rerun()
+
                 col1, col2 = st.columns([2, 1])
                 if not gelezen:
                     if col2.button("✔️ Ik heb dit gelezen", key=f"gelezen_{row['ID']}"):
@@ -629,6 +662,39 @@ with tab3:
             cols[1].markdown(f"**Product:**<br>{row['Productnaam']}<br><b>Bestelnummer:</b> {row['Bestelnummer']}", unsafe_allow_html=True)
             cols[2].markdown(f"**Nazending:**<br>{row['Nazending']}", unsafe_allow_html=True)
             cols[3].markdown(f"**Opmerking magazijn:**<br>{row.get('Beoordeling opmerking','')}", unsafe_allow_html=True)
+            
+            # FOTO PREVIEW hier:
+            fotos = []
+            try: fotos = json.loads(row.get("Fotos", "[]"))
+            except: pass
+            preview_this = False
+            if fotos:
+                foto_row = st.columns(len(fotos))
+                for j, foto in enumerate(fotos):
+                    if os.path.exists(foto):
+                        with foto_row[j]:
+                            st.image(foto, width=60)
+                            if st.button("👁️", key=f"preview_siu_{row['ID']}_{j}"):
+                                st.session_state.preview_foto = foto
+                                st.session_state.preview_idx = f"siu_{row['ID']}_{j}"
+                                st.rerun()
+                        if (
+                            st.session_state.preview_foto == foto
+                            and st.session_state.preview_idx == f"siu_{row['ID']}_{j}"
+                        ):
+                            preview_this = True
+                    else:
+                        st.write("_Foto ontbreekt_")
+            else:
+                st.write("_Geen foto's_")
+            if preview_this:
+                with st.expander("🔍 Preview foto", expanded=True):
+                    st.image(st.session_state.preview_foto, use_column_width="auto", caption="Klik buiten deze preview om te sluiten.")
+                    if st.button("Sluit preview", key=f"sluit_preview_siu_{row['ID']}_{j}"):
+                        st.session_state.preview_foto = None
+                        st.session_state.preview_idx = None
+                        st.rerun()
+            
             siu = cols[4].text_input("SIU-nummer invoeren", value=str(row.get("SIU-nummer","")), key=f"siu_{row['ID']}")
             if cols[5].button("SIU opslaan", key=f"save_siu_{row['ID']}"):
                 df.loc[df["ID"] == row["ID"], "SIU-nummer"] = str(siu)
@@ -663,6 +729,39 @@ with tab4:
             cols[1].markdown(f"**Product:**<br>{row['Productnaam']}<br><b>Bestelnummer:</b> {row['Bestelnummer']}", unsafe_allow_html=True)
             cols[2].markdown(f"**Nazending:**<br>{row['Nazending']}", unsafe_allow_html=True)
             cols[3].markdown(f"**SIU-nummer:**<br>{row.get('SIU-nummer','')}", unsafe_allow_html=True)
+
+            # FOTO PREVIEW hier:
+            fotos = []
+            try: fotos = json.loads(row.get("Fotos", "[]"))
+            except: pass
+            preview_this = False
+            if fotos:
+                foto_row = st.columns(len(fotos))
+                for j, foto in enumerate(fotos):
+                    if os.path.exists(foto):
+                        with foto_row[j]:
+                            st.image(foto, width=60)
+                            if st.button("👁️", key=f"preview_verstuur_{row['ID']}_{j}"):
+                                st.session_state.preview_foto = foto
+                                st.session_state.preview_idx = f"verstuur_{row['ID']}_{j}"
+                                st.rerun()
+                        if (
+                            st.session_state.preview_foto == foto
+                            and st.session_state.preview_idx == f"verstuur_{row['ID']}_{j}"
+                        ):
+                            preview_this = True
+                    else:
+                        st.write("_Foto ontbreekt_")
+            else:
+                st.write("_Geen foto's_")
+            if preview_this:
+                with st.expander("🔍 Preview foto", expanded=True):
+                    st.image(st.session_state.preview_foto, use_column_width="auto", caption="Klik buiten deze preview om te sluiten.")
+                    if st.button("Sluit preview", key=f"sluit_preview_verstuur_{row['ID']}_{j}"):
+                        st.session_state.preview_foto = None
+                        st.session_state.preview_idx = None
+                        st.rerun()
+
             with cols[5]:
                 verzonden_door = st.selectbox("Verzonden door:", options=TEAMLEDEN, key=f"verz_{row['ID']}")
                 colA, colB = st.columns([1,1])
@@ -683,7 +782,7 @@ with tab4:
     else:
         st.info("Geen pakketten klaar om te verzenden.")
 
-# --------- TAB 5: Verzonden pakketten (met countdown) ---------
+# --------- TAB 5: Verzonden pakketten ---------
 with tab5:
     instellingen = laad_instellingen()
     BEWAAR_UUR = instellingen["bewaar_uur"]
@@ -730,6 +829,39 @@ with tab5:
             cols[2].markdown(f"**Nazending:**<br>{row['Nazending']}", unsafe_allow_html=True)
             cols[3].markdown(progress_html(row['Status']), unsafe_allow_html=True)
             cols[4].markdown(status_chip(row['Status']), unsafe_allow_html=True)
+            
+            # FOTO PREVIEW hier:
+            fotos = []
+            try: fotos = json.loads(row.get("Fotos", "[]"))
+            except: pass
+            preview_this = False
+            if fotos:
+                foto_row = st.columns(len(fotos))
+                for j, foto in enumerate(fotos):
+                    if os.path.exists(foto):
+                        with foto_row[j]:
+                            st.image(foto, width=60)
+                            if st.button("👁️", key=f"preview_verzonden_{row['ID']}_{j}"):
+                                st.session_state.preview_foto = foto
+                                st.session_state.preview_idx = f"verzonden_{row['ID']}_{j}"
+                                st.rerun()
+                        if (
+                            st.session_state.preview_foto == foto
+                            and st.session_state.preview_idx == f"verzonden_{row['ID']}_{j}"
+                        ):
+                            preview_this = True
+                    else:
+                        st.write("_Foto ontbreekt_")
+            else:
+                st.write("_Geen foto's_")
+            if preview_this:
+                with st.expander("🔍 Preview foto", expanded=True):
+                    st.image(st.session_state.preview_foto, use_column_width="auto", caption="Klik buiten deze preview om te sluiten.")
+                    if st.button("Sluit preview", key=f"sluit_preview_verzonden_{row['ID']}_{j}"):
+                        st.session_state.preview_foto = None
+                        st.session_state.preview_idx = None
+                        st.rerun()
+
             st.markdown("</div>", unsafe_allow_html=True)
         st.info(f"Verzonden pakketten verdwijnen automatisch uit dit overzicht na {BEWAAR_UUR} uur.")
         st.markdown("""
