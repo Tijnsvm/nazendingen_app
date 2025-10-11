@@ -37,7 +37,7 @@ if not os.path.exists(UPLOAD_MAP):
 def laad_instellingen():
     if not os.path.exists(INSTELLINGEN_BESTAND):
         instellingen = {
-            "teamleden": ["Tijn", "Jordi", "Thijmen", "Maaike", "Ulfet"],
+            "teamleden": ["Tijn", "Jordi", "Thijmen", "Maaike", "Ulfet", "Romy"],
             "bewaar_uur": 26
         }
         opslaan_instellingen(instellingen)
