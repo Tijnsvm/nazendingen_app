@@ -2,3 +2,9 @@ streamlit
 pandas
 openpyxl
 matplotlib
+openpyxl
+gspread
+gspread>=5.10
+google-auth>=2.23
+google-auth-oauthlib>=1.2
+google-api-python-client>=2.134
