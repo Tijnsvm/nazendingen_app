@@ -8,6 +8,11 @@ import time
 import shutil
 import matplotlib.pyplot as plt
 import matplotlib
+from google.oauth2.service_account import Credentials
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaIoBaseUpload
+from io import BytesIO
+import streamlit as st
 matplotlib.use('Agg')
 
 # ===============================
@@ -1111,4 +1116,8 @@ st.radio(
 
 # Render
 TAB_FUNCS[st.session_state.active_tab]()
+
+#st.write("Secrets geladen ✅")
+#st.write(st.secrets["google"]["client_email"])
+#st.write("Drive map ID:", st.secrets["drive"]["uploads_folder_id"])
 
